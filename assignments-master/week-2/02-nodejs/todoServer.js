@@ -42,40 +42,120 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const fs = require('fs');
 const app = express();
 
 app.use(bodyParser.json());
 
-let todos = [
-  {
-    id: 1,
-    title: "This is sample title",
-    description: "This is sample description",
-    completed: true
-  },
-  {
-    id: 2,
-    title: "This is sample title",
-    description: "This is sample description",
-    completed: true
-  },
-  {
-    id: 3,
-    title: "This is sample title",
-    description: "This is sample description",
-    completed: true
-  }
-]
+// let todos = [
+//   {
+//     id: 1,
+//     title: "This is sample title",
+//     completed: true,
+//     description: "This is sample description"
+//   },
+//   {
+//     id: 2,
+//     title: "This is sample title",
+//     completed: true,
+//     description: "This is sample description"
+//   }
+// ]
 
-app.get('/', (req, res)=>{
+let originalJson = require('./todos.json');
+
+let todos = originalJson;
+
+function updateJson(data, fileName){
+    const jsonString = JSON.stringify(data, null, 2);
+    fs.writeFile(fileName, jsonString, 'utf-8',(err)=>{
+      if(err)
+        console.log('Failed to Write');
+      else
+        console.log('Written Successfully');
+    })
+}
+
+app.get('/todos', (req, res)=>{
     res.send({todos});
 });
 
-app.all("*", (req, res)=>{
-  res.send(200).status(404).send("Route Not Found");
+app.get('/todos/:idParam', (req, res)=>{
+    const id = req.params.idParam;
+    let sent = false;
+    for(let i=0; i<todos.length; i++){
+      if(todos[i].id == id){
+        res.status(200).send(todos[i]);
+        sent = true;
+        break;
+      }
+    }
+    if(!sent){
+      res.status(404).send('Not Found');
+    }
+})
+
+
+app.post('/todos', (req, res)=>{
+    const newTodo = {};
+    function genRandomId(){
+      return Date.now();
+    }
+    newTodo.id = genRandomId();
+    const gotBody = req.body;
+    newTodo.title = gotBody.title;
+    newTodo.completed = gotBody.completed;
+    newTodo.description = gotBody.description;
+    todos.push(newTodo);
+    updateJson(todos, 'todos.json');
+  
+    res.status(201).send({
+      message: "Todo Added Successfully"
+    })
+})
+
+app.put('/todos/:paramId', (req, res)=>{
+  const id = req.params.paramId;
+  const updatedDescription = req.body.description;
+  let sent = false;
+  for(let i=0; i<todos.length; i++){
+    if(todos[i].id == id){
+      todos[i].description = updatedDescription;
+      updateJson(todos, 'todos.json');
+      res.status(200).send({
+        message: "Updated Successfully"
+      })
+      sent = true;
+      break;
+    }
+  }
+  if(!sent){
+    res.status(404).send('Not Found');
+  }
 });
 
-app.listen(3000);
+// 5. DELETE /todos/:id - Delete a todo item by ID
+//     Description: Deletes a todo item identified by its ID.
+//     Response: 200 OK if the todo item was found and deleted, or 404 Not Found if not found.
+//     Example: DELETE http://localhost:3000/todos/123
+
+app.delete('/todos/:paramId', (req, res)=>{
+    const id = req.params.paramId;
+    todos = todos.filter(i => i.id != id);
+    updateJson(todos, 'todos.json');
+    res.status(200).send({
+      message: "Deleted Successfully"
+    })
+})
+
+
+
+app.all("*", (req, res)=>{
+  res.status(404).send("Route Not Found");
+});
+
+app.listen(3000, ()=>{
+  console.log("http://localhost:3000/todos");
+});
 
 module.exports = app;
