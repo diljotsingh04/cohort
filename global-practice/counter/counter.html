@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter</title>
+</head>
+<body>
+    <div id="counter">
+        Loading...
+    </div>
+    <script>
+        let counter = 0;
+        
+        function count(){
+            document.getElementById('counter').innerText = counter++;
+            setTimeout(count, 1000);
+        }
+
+        // count();
+    </script>
+</body>
+</html>

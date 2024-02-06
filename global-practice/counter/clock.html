@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .hide{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">Loading..</div>
+    <span id="toggler">:</span>
+    <script>
+        let togg = document.getElementById('toggler');
+        function toggler(){
+            if(togg.style.visibility == 'hidden'){
+                togg.style.visibility = 'visible';
+            }
+            else{
+                togg.style.visibility = 'hidden';
+            }
+        }
+        setInterval(toggler, 1000);
+
+
+        function updateClock(){
+            let date = new Date();
+            let getHour = date.getHours()%12 || 12;
+            let ap = 'AM';
+            if(date.getHours() >=12){
+                ap = 'PM'
+            }
+            let format = `${getHour} : ${date.getMinutes()} : ${date.getSeconds()} ${ap}`;
+            document.getElementById('clock').innerText = format;
+        }
+        
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
