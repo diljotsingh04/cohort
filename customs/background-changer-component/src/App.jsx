@@ -1,21 +1,37 @@
-import { useState } from 'react'
-import './style.css'
+import { useEffect, useState } from 'react'
 
 function App() {
 
-  const [bgColor, setBgColor] = useState("white");
+  const[length, setLength] = useState(0);
+  const[para, setPara] = useState("Enter the prompt to proceed");
 
+  
+  const generatePara = ()=>{
+    if(length > 0){
+        let alphabets = "abcdefghijklmnopqrstuvwxyz";
+        let words = [];
+        for(let i=0; i<length; i++){
+          let word = "";
+          for(let j=0; j<(Math.floor(Math.random() * 7)+1); j++){
+            word += alphabets[Math.floor(Math.random() * 26)];
+          }
+          words.push(word);
+        }
+        setPara(words.join(' '));
+    }
+    else{
+      setPara("Length should be greater than zero");
+    }
+  }
+  
   return (
-    <div className='container' style={{ background: bgColor }}>
-      <div className="bottom">
-        <button onClick={() => setBgColor("red")} id='red'>Red</button>
-        <button onClick={() => setBgColor("green")} id='green'>Green</button>
-        <button onClick={() => setBgColor("blue")} id='blue'>Blue</button>
-        <button onClick={() => setBgColor("yellow")} id='yellow'>Yellow</button>
-        <button onClick={() => setBgColor("white")} id='white'>Default</button>
-      </div>
-    </div>
+    <>
+      <input type="number" onChange={(e)=>setLength(e.target.value)} value={length==0? "" : length} placeholder='Enter the length of para'/>
+      <button onClick={generatePara}>Generate</button>
+      <div className="displaypara">{para}</div>
+    </>
   )
+  
 }
 
 export default App
