@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.container{
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+.bottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 1px;
+    width: 100vw;
+    margin-bottom: 31px;
+    gap: 17px;
+}
+button{
+    padding: 4px 9px;
+    border-radius: 8px;
+    background: red;
+    color: white;
+}
+#green{
+    background: green;
+}
+#yellow{
+    background: yellow;
+    color: black;
+}
+#blue{
+    background: blue;
+}
+#white{
+    background: white;
+    color: black;
+}
