@@ -1,7 +1,11 @@
 import Image from "next/image";
 
 export default function Home() {
+
   return (
-    <h1 className="text-center">Sat Sri Akal</h1>
+    <div>
+      <h1 className="text-center">Sat Sri Akal</h1>
+      <h2 className="text-center">Hello world</h2>
+    </div>
   );
 }
