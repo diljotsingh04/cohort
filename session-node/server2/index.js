@@ -25,12 +25,11 @@ app.get('/', (req, res) => {
     })
 })
 
-app.get('/auth/:username', (req, res) => {
-    const token = jwt.sign(req.params.username, 'secret_key');
+app.get('/clear', (req, res) => {
 
-    res.cookie("token", token);
+    res.clearCookie("token");
     return res.send({
-        message: "user has been authenticated"
+        message: "cookie cleared"
     })
 });
 
